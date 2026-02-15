@@ -5,7 +5,7 @@ import numpy as np
 from datetime import datetime
 
 # Configuración Estilo Journal Fuel
-st.set_page_config(page_title="ECU Expert Lab", layout="wide")
+st.set_page_config(page_title="Simulador ECU", layout="wide")
 
 # --- FUNCIONES DE INSTRUMENTOS ---
 def crear_gauge(valor, ref, titulo, color_bar, max_v):
@@ -24,7 +24,7 @@ if 'log' not in st.session_state: st.session_state.log = []
 if 'v_out' not in st.session_state: st.session_state.v_out = 5.0
 if 'temp' not in st.session_state: st.session_state.temp = 25.0
 
-st.title("🔬 Sistema Experto de Diagnóstico ECU")
+st.title("🔬 Simulador Básico, Daniel Vallejo")
 st.markdown("---")
 
 # --- UI DE TRES ETAPAS ---
@@ -55,7 +55,7 @@ with col3:
 # BOTÓN DE AUTO-DIAGNÓSTICO EXPERTO (SINCRONIZADO)
 # ==========================================================
 st.markdown("---")
-if st.button("🔍 EJECUTAR AUTO-DIAGNÓSTICO INTELIGENTE", use_container_width=True):
+if st.button("🔍 CLIC PARA DIAGNOSTICO", use_container_width=True):
     t_now = datetime.now().strftime('%H:%M:%S')
     
     # RECALCULAR VALORES EN TIEMPO REAL
@@ -89,5 +89,5 @@ if st.button("🔍 EJECUTAR AUTO-DIAGNÓSTICO INTELIGENTE", use_container_width=
     
     st.rerun()
 
-st.markdown("### 📝 Historial Forense")
+st.markdown("### 📝 HISTORIAL DTC")
 st.code("\n".join(st.session_state.log) if st.session_state.log else "Sin registros.")
