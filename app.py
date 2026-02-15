@@ -4,15 +4,40 @@ import random
 import numpy as np
 from datetime import datetime
 import base64
+import streamlit.components.v1 as components
 
+
+# --- FUNCIÓN DE ALARMA SONORA (Web Audio API) ---
 def alarma_sonora(repeticiones=3):
-    beep_audio = """
-    <audio autoplay>
-        <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
-    </audio>
+    js_code = f"""
+    <script>
+    function beep() {{
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var oscillator = ctx.createOscillator();
+        var gainNode = ctx.createGain();
+        
+        oscillator.type = "square";
+        oscillator.frequency.setValueAtTime(1000, ctx.currentTime);
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        
+        oscillator.start();
+        gainNode.gain.exponentialRampToValueAtTime(
+            0.00001, ctx.currentTime + 0.2
+        );
+        
+        setTimeout(() => {{
+            oscillator.stop();
+            ctx.close();
+        }}, 200);
+    }}
+    
+    for (let i = 0; i < {repeticiones}; i++) {{
+        setTimeout(beep, i * 300);
+    }}
+    </script>
     """
-    for _ in range(repeticiones):
-        st.markdown(beep_audio, unsafe_allow_html=True)
+    st.components.v1.html(js_code)
 
 # Configuración Estilo Journal Fuel
 st.set_page_config(page_title="ECU Expert Lab", layout="wide")
