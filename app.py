@@ -3,6 +3,16 @@ import plotly.graph_objects as go
 import random
 import numpy as np
 from datetime import datetime
+import base64
+
+def alarma_sonora(repeticiones=3):
+    beep_audio = """
+    <audio autoplay>
+        <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+    </audio>
+    """
+    for _ in range(repeticiones):
+        st.markdown(beep_audio, unsafe_allow_html=True)
 
 # Configuración Estilo Journal Fuel
 st.set_page_config(page_title="ECU Expert Lab", layout="wide")
@@ -69,16 +79,19 @@ if st.button("🔍 EJECUTAR AUTO-DIAGNÓSTICO INTELIGENTE", use_container_width=
     st.subheader("📋 Veredicto del Sistema Experto")
     
     if v_eval < 4.5:
+        alarma_sonora(3)
         st.error(f"🚨 FALLO EN ETAPA 1: Voltaje insuficiente ({v_eval}V). El L4949 no regula correctamente.")
         st.info("Acción sugerida: Revisar batería o reemplazar regulador L4949.")
         st.session_state.log.insert(0, f"[{t_now}] CRÍTICO: Fallo L4949 a {v_bat}V.")
         
     elif v_eval > 5.5:
+        alarma_sonora(2)
         st.warning(f"⚠️ SOBREVOLTAJE: Tensión lógica peligrosa ({v_eval}V).")
         st.info("Acción sugerida: Verificar alternador y diodo de protección.")
         st.session_state.log.insert(0, f"[{t_now}] ALERTA: Sobrevoltaje detectado.")
         
     elif t_eval > 95.0:
+        alarma_sonora(4)
         st.error(f"🚨 FALLO EN ETAPA 3: Estrés térmico en IGBT 8201AG ({t_eval}°C).")
         st.info(f"Acción sugerida: Reducir carga de {rpm} RPM. Revisar disipación térmica del componente.")
         st.session_state.log.insert(0, f"[{t_now}] CRÍTICO: Sobrecalentamiento IGBT ({t_eval}°C).")
